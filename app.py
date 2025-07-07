@@ -162,15 +162,24 @@ def auth_me_for_user(tesco_username: str, tesco_password: str):
     if SHIFT_DEBUG:
         print(f"🔑 [DEBUG] Authenticating '{tesco_username}' with DTube...")
 
+    # Combine username and password with a colon
+    credentials = f"{tesco_username}:{tesco_password}"
+
+    # Encode to Base64
+    encoded_credentials = base64.b64encode(credentials.encode()).decode()
+
+    #Construct headers with Basic Auth
     headers = {
-        "Authorization": "Basic U0tfMTExMTMwMTEyOkxCZ1RCKll2aHJDXmQ",
+        "Authorization": f"Basic {encoded_credentials}",
         "Content-Type": "application/json",
         "Accept": "application/json"
     }
+
     payload = {
         "username": tesco_username,
         "password": tesco_password
     }
+
     resp = requests.post(
         "https://dtube.tesco-europe.com/DTUBE_RESTAPI/jaxrs/USER/authenticateUser",
         headers=headers, json=payload
